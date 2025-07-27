@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Face Attendance System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #1a252f;
+            --accent-color: #3498db;
+            --danger-color: #e74c3c;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #212529;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo h2 {
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Dashboard Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .welcome-section h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-section p {
+            color: #7f8c8d;
+        }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card.students i { color: #3498db; }
+        .stat-card.teachers i { color: #2ecc71; }
+        .stat-card.classes i { color: #f39c12; }
+        .stat-card.attendance i { color: #9b59b6; }
+
+        .stat-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+
+        /* Tables */
+        .table-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Charts */
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+        }
+
+        .chart-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-wrapper {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .filter-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-buttons {
+                margin-left: 0;
+                justify-content: center;
+            }
+
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h2><a href="/"><i class="fas fa-camera"></i> Face Attendance System</a></h2>
+        </div>
+        <div class="nav-links">
+            <a href="/register"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="/student"><i class="fas fa-user-graduate"></i> Student</a>
+            <a href="/teacher"><i class="fas fa-chalkboard-teacher"></i> Teacher</a>
+            <a href="/admin"><i class="fas fa-user-shield"></i> Admin</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h2><i class="fas fa-user-shield"></i> Admin Dashboard</h2>
+            <p>System-wide administration and analytics</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+            <div class="stat-card students">
+                <i class="fas fa-user-graduate"></i>
+                <h3>Total Students</h3>
+                <p>{{ total }}</p>
+            </div>
+            <div class="stat-card teachers">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <h3>Total Teachers</h3>
+                <p>{{ total_t }}</p>
+            </div>
+            <div class="stat-card classes">
+                <i class="fas fa-school"></i>
+                <h3>Classes</h3>
+                <p> 3 </p>
+            </div>
+            <div class="stat-card attendance">
+                <i class="fas fa-clipboard-check"></i>
+                <h3>Today's Attendance</h3>
+                <p>{{ count }}</p>
+            </div>
+        </div>
+
+
+
+        <!-- Charts Section -->
+        <div class="chart-container">
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-bar"></i> Class-wise Attendance</h3>
+                <div class="chart-wrapper">
+                    <canvas id="classChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <h3><i class="fas fa-chart-pie"></i> Attendance </h3>
+                <div class="chart-wrapper">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+        
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <form method="GET" class="filter-form">
+                <div class="form-group">
+                    <label for="class_name"><i class="fas fa-users"></i> Class</label>
+                    <select id="class_name" name="class_name" class="form-control">
+                        <option value="">All Classes</option>
+                        <option value="FY" {% if request.args.get('class_name') == 'FY' %}selected{% endif %}>First Year</option>
+                        <option value="SY" {% if request.args.get('class_name') == 'SY' %}selected{% endif %}>Second Year</option>
+                        <option value="TY" {% if request.args.get('class_name') == 'TY' %}selected{% endif %}>Third Year</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date"><i class="fas fa-calendar"></i> Date</label>
+                    <input type="date" id="date" name="date" class="form-control" value="{{ request.args.get('date') }}">
+                </div>
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Filter
+                    </button>
+                    <a href="/admin/download?class_name={{ request.args.get('class_name') }}&date={{ request.args.get('date') }}" class="btn btn-success">
+                        <i class="fas fa-file-export"></i> Export CSV
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Attendance Records -->
+        <div class="table-section">
+            <div class="section-header">
+                <h3><i class="fas fa-clipboard-list"></i> Attendance Records</h3>
+                <p>Showing {{ records|length }} records</p>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in records %}
+                    <tr class="fade-in">
+                        <td>{{ row.rollno }}</td>
+                        <td>{{ row.name }}</td>
+                        <td>{{ row.class_name }}</td>
+                        <td>{{ row.date }}</td>
+                        <td>{{ row.time }}</td>
+                        <td><span class="present">Present</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Class-wise Attendance Chart
+        const classCtx = document.getElementById('classChart').getContext('2d');
+        new Chart(classCtx, {
+            type: 'bar',
+            data: {
+                labels: ['First Year', 'Second Year', 'Third Year'],
+                datasets: [{
+                    label: 'Attendance Count',
+                    data: [{{ fy }}, {{ sy }}, {{ ty }}],
+                    backgroundColor: [
+                        'rgba(52, 152, 219, 0.7)',
+                        'rgba(46, 204, 113, 0.7)',
+                        'rgba(243, 156, 18, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(52, 152, 219, 1)',
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(243, 156, 18, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        color: '#fff',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: (value) => {
+                            return value;
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+
+        // Attendance Distribution Chart
+        const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
+        new Chart(attendanceCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Present', 'Absent'],
+                datasets: [{
+                    data: [{{ count }}, {{ absent }}],
+                    backgroundColor: [
+                        'rgba(46, 204, 113, 0.7)',
+                        'rgba(231, 76, 60, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(46, 204, 113, 1)',
+                        'rgba(231, 76, 60, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        color: '#fff',
+                        font: {
+                            weight: 'bold'
+                        },
+                        formatter: (value, context) => {
+                            return `${context.chart.data.labels[context.dataIndex]}\n${value}%`;
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+
+        // Add animation to table rows
+        const tableRows = document.querySelectorAll('tbody tr');
+        tableRows.forEach((row, index) => {
+            row.style.animationDelay = `${index * 0.05}s`;
+        });
+    </script>
+</body>
+</html>

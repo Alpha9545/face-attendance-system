@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard | Face Attendance System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3a5a78;
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo h2 {
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Dashboard Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .welcome-message h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-message p {
+            color: #6c757d;
+        }
+
+        .class-info {
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .class-info p {
+            font-weight: 500;
+        }
+
+        /* Stats Cards */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .stat-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        /* Tables */
+        .table-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #111212;
+        }
+
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #111212;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+
+        .btn-warning {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #e67e22;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .present {
+            color: var(--success-color);
+        }
+
+        .absent {
+            color: var(--danger-color);
+        }
+
+        /* Attendance Chart */
+        .chart-container {
+            height: 300px;
+            margin-top: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .action-buttons {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Toggle Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h2><a href="/"><i class="fas fa-camera"></i> Face Attendance System</a></h2>
+        </div>
+        <div class="nav-links">
+            <a href="/register"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="/student"><i class="fas fa-user-graduate"></i> Student</a>
+            <a href="/teacher"><i class="fas fa-chalkboard-teacher"></i> Teacher</a>
+            <a href="/admin"><i class="fas fa-user-shield"></i> Admin</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <div class="welcome-message">
+                <h2>Welcome, {{ username }}</h2>
+                <p>Teacher Dashboard - Manage your class attendance efficiently</p>
+            </div>
+            <div class="class-info">
+                <p><i class="fas fa-users"></i> Class: {{ class_name }}</p>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>Total Students</h3>
+                <p>{{ total_students }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Today's Attendance</h3>
+                <p>{{ count }}/{{ total_students }}</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-percentage"></i>
+                <h3>Attendance Rate</h3>
+                <p>{{ rate }}%</p>
+            </div>
+            
+        </div>
+
+        <!-- Student List Section -->
+        <div class="table-section">
+            <div class="section-header">
+                <h3><i class="fas fa-user-graduate"></i> Student List</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="toggleStudentList()">
+                        <i class="fas fa-eye"></i> Toggle View
+                    </button>
+                    <button class="btn btn-success" onclick="exportStudentList()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+            
+            <div id="studentListSection" style="display: none;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.rollno }}</td>
+                            <td>{{ student.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Attendance Records -->
+        <div class="table-section">
+            <div class="section-header">
+                <h3><i class="fas fa-clipboard-list"></i> Attendance Records</h3>
+                <div class="action-buttons">
+                    <a href="/teacher_dashboard?filter=today" class="btn btn-primary">
+                        <i class="fas fa-calendar-day"></i> Today
+                    </a>
+                    <a href="/teacher_dashboard" class="btn btn-secondary">
+                        <i class="fas fa-list"></i> All
+                    </a>
+                </div>
+            </div>
+            
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Roll No</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in records %}
+                    <tr>
+                        <td>{{ record.rollno }}</td>
+                        <td>{{ record.name }}</td>
+                        <td>{{ record.date }}</td>
+                        <td>{{ record.time }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Toggle student list
+        function toggleStudentList() {
+            const section = document.getElementById('studentListSection');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+            
+            if (section.style.display === 'block') {
+                section.classList.add('fade-in');
+            }
+        }
+
+        // Export functions
+        function exportStudentList() {
+            alert('Exporting student list as CSV...');
+            // Implement actual export logic here
+        }
+
+        function exportAttendance() {
+            alert('Exporting attendance records as CSV...');
+            // Implement actual export logic here
+        }
+
+        // Filter today's records
+        function filterToday() {
+            alert('Filtering today\'s attendance...');
+            // Implement actual filter logic here
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Attendance Chart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='nav.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h2><a href="/"><i class="fas fa-camera"></i> Face Attendance System</a></h2>
+        </div>
+        <div class="nav-links">
+            <a href="/register"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="/student"><i class="fas fa-user-graduate"></i> Student</a>
+            <a href="/teacher"><i class="fas fa-chalkboard-teacher"></i> Teacher</a>
+            <a href="/admin"><i class="fas fa-user-shield"></i> Admin</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+    <h2>📊 Class-wise Attendance Chart</h2>
+    <canvas id="attendanceChart" width="600" height="400"></canvas>
+
+    <script>
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: {{ class_names|tojson }},
+                datasets: [{
+                    label: 'Attendance Count',
+                    data: {{ counts|tojson }},
+                    backgroundColor: ['#3498db', '#2ecc71', '#e74c3c']
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

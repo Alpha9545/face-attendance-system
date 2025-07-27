@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration | Face Attendance System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3a5a78;
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --light-color: #f8f9fa;
+            --dark-color: #171a1d;
+            --success-color: #4bb543;
+            --danger-color: #d9534f;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--box-shadow);
+        }
+
+        .logo h2 {
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .logo a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Registration Container */
+        .registration-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            flex-grow: 1;
+        }
+
+        .registration-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .registration-header h2 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .registration-header i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(76, 201, 240, 0.2);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+
+        /* Password Wrapper */
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Camera Preview */
+        .camera-section {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .camera-preview {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: var(--border-radius);
+            border: 2px dashed #ddd;
+            margin: 1rem auto;
+            display: none;
+        }
+
+        .webcam-container {
+            position: relative;
+            margin: 1rem auto;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .webcam {
+            width: 100%;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+
+        .capture-btn {
+            background-color: var(--success-color);
+            margin-top: 1rem;
+        }
+
+        .capture-btn:hover {
+            background-color: #3fa037;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .alert-danger {
+            background-color: rgba(217, 83, 79, 0.1);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .alert-success {
+            background-color: rgba(75, 181, 67, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .registration-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h2><a href="/"><i class="fas fa-camera"></i> Face Attendance System</a></h2>
+        </div>
+        <div class="nav-links">
+            <a href="/register"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="/student"><i class="fas fa-user-graduate"></i> Student</a>
+            <a href="/teacher"><i class="fas fa-chalkboard-teacher"></i> Teacher</a>
+            <a href="/admin"><i class="fas fa-user-shield"></i> Admin</a>
+        </div>
+    </nav>
+
+    <div class="registration-container">
+        <div class="registration-header">
+            <i class="fas fa-user-graduate"></i>
+            <h2>Student Registration</h2>
+            <p>Register new students for face recognition attendance</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} fade-in">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data" id="registrationForm">
+            <div class="form-group">
+                <label for="rollno"><i class="fas fa-id-card"></i> Roll Number</label>
+                <input type="text" id="rollno" name="rollno" class="form-control" placeholder="Enter student roll number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="student_id"><i class="fas fa-id-badge"></i> Student ID</label>
+                <input type="text" id="student_id" name="student_id" class="form-control" placeholder="Enter student ID" required>
+            </div>
+
+            <div class="form-group">
+                <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" id="name" name="name" class="form-control" placeholder="Enter student full name" required>
+            </div>
+
+
+            <div class="form-group">
+                <label for="class_name"><i class="fas fa-users"></i> Class</label>
+                <select id="class_name" name="class_name" class="form-control" required>
+                    <option value="" disabled selected>Select class</option>
+                    <option value="FY">First Year (FY)</option>
+                    <option value="SY">Second Year (SY)</option>
+                    <option value="TY">Third Year (TY)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock"></i> Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Create password" required ><!--minlength="8"-->
+                    <i class="far fa-eye password-toggle" id="togglePassword"></i>
+                </div>
+                <small class="text-muted">Minimum 8 characters</small>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password"><i class="fas fa-lock"></i> Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" placeholder="Confirm password" required>
+            </div>
+
+            
+
+            <button type="submit" class="btn">
+                <input type="submit" value="Capture Photo">
+            </button>
+        </form>
+    </div>
+
+    <div class="footer">
+        <p>© 2023 Face Recognition Attendance System. All rights reserved.</p>
+    </div>
+
+    <script>
+        // Password toggle visibility
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
+        const confirmPassword = document.querySelector('#confirm_password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            confirmPassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Form validation
+        const form = document.getElementById('registrationForm');
+        form.addEventListener('submit', function(e) {
+            // Check if passwords match
+            if (password.value !== confirmPassword.value) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                confirmPassword.focus();
+            }
+
+            // Check if face was captured
+            const faceData = document.getElementById('face_data').value;
+            if (!faceData) {
+                e.preventDefault();
+                alert('Please capture your face before submitting!');
+            }
+        });
+
+       
+
+
+        // Clear error when user starts typing
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('input', () => {
+                const alert = document.querySelector('.alert');
+                if (alert) alert.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>

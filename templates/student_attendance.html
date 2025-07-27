@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Attendance | Face Recognition System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3a5a78;
+            --secondary-color: #2c3e50;
+            --accent-color: #3498db;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        }
+
+        body, html {
+            overflow-x: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .navbar .logo h2 a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            background-color: #34495e;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section h2 {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-section p {
+            color: #6c757d;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .stat-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .attendance-section {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .export-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+
+        .export-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .present {
+            color: var(--success-color);
+        }
+
+        .absent {
+            color: var(--danger-color);
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+            box-shadow: var(--box-shadow);
+        }
+
+        .profile-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info .student-id {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid #e9ecef;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .profile-section {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+    </style>
+
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <h2><a href="/"><i class="fas fa-camera"></i> Face Attendance System</a></h2>
+        </div>
+        <div class="nav-links">
+            <a href="/register"><i class="fas fa-user-plus"></i> Register</a>
+            <a href="/student"><i class="fas fa-user-graduate"></i> Student</a>
+            <a href="/teacher"><i class="fas fa-chalkboard-teacher"></i> Teacher</a>
+            <a href="/admin"><i class="fas fa-user-shield"></i> Admin</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="profile-section fade-in">
+            <img src="https://ui-avatars.com/api/?name={{ name }}&background=random&size=100" alt="Profile Picture" class="profile-pic">
+            <div class="profile-info">
+                <h3>{{ name }}</h3>
+                <p class="student-id">ID: {{ student_id }}</p>
+                <p>Computer Science Department</p>
+                <p>Batch: 2025</p>
+            </div>
+        </div>
+
+        <div class="stats-cards">
+            <div class="stat-card fade-in delay-1">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Total Attendance</h3>
+                <p>{{ records|length }}</p>
+            </div>
+            <div class="stat-card fade-in delay-2">
+                <i class="fas fa-percentage"></i>
+                <h3>Attendance Rate</h3>
+                <p>{{ ((records|length / 30) * 100)|round(1) }}%</p>
+            </div>
+            <div class="stat-card fade-in delay-3">
+                <i class="fas fa-clock"></i>
+                <h3>Last Attendance</h3>
+                <p>{{ records[-1].date if records else 'N/A' }}</p>
+            </div>
+        </div>
+
+        <div class="attendance-section fade-in">
+            <div class="section-header">
+                <h3><i class="fas fa-clipboard-list"></i> Attendance Records</h3>
+                <!-- <button class="export-btn" id="exportBtn"><i class="fas fa-download"></i> Export as CSV</button> -->
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Class</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in records %}
+                        <tr>
+                            <td>{{ row.date }}</td>
+                            <td>{{ row.time }}</td>
+                            <td>{{ class_name}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        
+
+        <div class="footer fade-in">
+            <p>© 2023 Face Recognition Attendance System. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Export button functionality
+            document.getElementById('exportBtn').addEventListener('click', function() {
+                // In a real application, this would generate and download a CSV file
+                alert('Exporting attendance data as CSV...');
+                // You would implement actual CSV export logic here
+            });
+
+            // Sample attendance data for the chart
+            const attendanceData = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Attendance Rate',
+                    data: [85, 79, 90, 81, 76, 88],
+                    backgroundColor: 'rgba(67, 97, 238, 0.2)',
+                    borderColor: 'rgba(67, 97, 238, 1)',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true
+                }]
+            };
+
+            // Create attendance chart
+            const ctx = document.getElementById('attendanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: attendanceData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 50,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Add animation to table rows
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach((row, index) => {
+                row.style.animation = `fadeIn 0.3s ease-out ${index * 0.05}s forwards`;
+                row.style.opacity = '0';
+            });
+        });
+    </script>
+</body>
+</html>
